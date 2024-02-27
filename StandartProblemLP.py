@@ -5,6 +5,7 @@ class StandartProblemLP:
     def __init__(self, problem_lp):
         self.C = Vector(problem_lp.C.elems.copy())
         self.target = problem_lp.target
+        self.x_limits_start = problem_lp.x_limits_start
 
         self.eq_list = []
         for eq in problem_lp.eq_list:

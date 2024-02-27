@@ -62,3 +62,7 @@ class Vector:
 
     def append(self, elem):
         self.elems.append(elem)
+
+    def copy(self):
+        new_elems = self.elems.copy()
+        return Vector(new_elems)

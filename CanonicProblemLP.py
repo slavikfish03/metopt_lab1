@@ -14,6 +14,7 @@ class CanonicProblemLP:
         self.not_basis = []
         self.constraints_sgn_plus_list = problem_lp.constraints_sgn_plus_list.copy()
         self.constraints_sgn_minus_list = problem_lp.constraints_sgn_minus_list.copy()
+        self.x_limits_start = problem_lp.x_limits_start.copy()
 
         self.A = []
         self.b = []

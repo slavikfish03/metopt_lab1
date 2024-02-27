@@ -69,6 +69,11 @@ class Matrix:
 
             return Matrix(new_elems)
 
+    def __add__(self, other):
+        for i in range(len(self.rows)):
+            self.rows[i].append(other[i])
+
+
     def transpose(self):
         count_new_rows = len(self.rows[0])
 
@@ -78,3 +83,10 @@ class Matrix:
             new_b_list.append(new_b_elem)
 
         return Matrix(new_b_list)
+
+    def copy(self):
+        new_rows = []
+        for row in self.rows:
+            new_rows.append(row.copy())
+
+        return Matrix(new_rows)

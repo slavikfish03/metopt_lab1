@@ -151,6 +151,15 @@ class GeneralProblemLP:
                     log.write("[ERROR: input]: На одну и ту же переменную наложены ограничения неотрицательности и "
                               "неположительности.\n")
                 raise SystemExit
+
+            self.x_limits_start = []
+            for i in range(len(self.N)):
+                if self.N[i] in self.constraints_sgn_plus_list:
+                    self.x_limits_start.append(1)
+                elif self.N[i] in self.constraints_sgn_minus_list:
+                    self.x_limits_start.append(-1)
+                else:
+                    self.x_limits_start.append(0)
         else:
             self.N = problem_lp.N
             self.target = problem_lp.target
@@ -160,6 +169,7 @@ class GeneralProblemLP:
             self.lte_list = problem_lp.lte_list
             self.constraints_sgn_plus_list = problem_lp.constraints_sgn_plus_list
             self.constraints_sgn_minus_list = problem_lp.constraints_sgn_minus_list
+            self.x_limits_start = problem_lp.x_limits_start
 
     def __str__(self):
         def sgn(x):
