@@ -3,7 +3,10 @@ from MethodExtremePoints import *
 
 if __name__ == "__main__":
     open('logs.txt', 'w').close()
+
+
     general_problem_lp_primary = GeneralProblemLP()
+    print("\n\n__________\nПРЯМАЯ ЗАДАЧА:\n__________\n\n")
     print(general_problem_lp_primary)
 
     standart_problem_lp_primary = StandartProblemLP(general_problem_lp_primary)
@@ -12,29 +15,30 @@ if __name__ == "__main__":
     canonic_problem_lp_primary = CanonicProblemLP(standart_problem_lp_primary)
     #print(canonic_problem_lp_primary)
 
+    print("\n\n__________\nРЕШЕНИЕ ПРЯМОЙ ЗАДАЧИ. МЕТОД ПЕРЕБОРА КРАЙНИХ ТОЧЕК:\n__________\n\n")
+    ExtremePointsPrimary = MethodExtremePoints(canonic_problem_lp_primary)
+    x, val = ExtremePointsPrimary.solve()
+    print("Оптимальный вектор: ")
+    print(x[0])
+    print("Оптимальное значение целевой функции: ")
+    print(val)
+
+
     general_problem_lp_dual = DualProblemLP(general_problem_lp_primary)
-    #print(general_problem_lp_dual)
+    print("\n\n__________\nДВОЙСТВЕННАЯ ЗАДАЧА:\n__________\n\n")
+    print(general_problem_lp_dual)
     standart_problem_lp_dual = StandartProblemLP(general_problem_lp_dual)
     #print(standart_problem_lp_dual)
     canonic_problem_lp_dual = CanonicProblemLP(standart_problem_lp_dual)
     #print(canonic_problem_lp_dual)
-    #print(canonic_problem_lp_dual)
 
-    #standart_problem_lp = StandartProblemLP(general_problem_lp)
-    #print(standart_problem_lp)
-
-    #canonic_problem_lp = CanonicProblemLP(standart_problem_lp)
-    #print(canonic_problem_lp)
-
-    ExtremePointsPrimary = MethodExtremePoints(canonic_problem_lp_primary)
-    x, val = ExtremePointsPrimary.solve()
-    print("opt_vec ", x)
-    print("target_func_val ", val)
-
+    print("\n\n__________\nРЕШЕНИЕ ДВОЙСТВЕННОЙ ЗАДАЧИ. МЕТОД ПЕРЕБОРА КРАЙНИХ ТОЧЕК:\n__________\n\n")
     ExtremePointsDual = MethodExtremePoints(canonic_problem_lp_dual)
     x1, val1 = ExtremePointsDual.solve()
-    print("opt_vec dual ", x1)
-    print("target_func_val dual ", val1)
+    print("Оптимальный вектор: ")
+    print(x1[0])
+    print("Оптимальное значение целевой функции: ")
+    print(val1)
 
     # vec1 = Vector([10, 20, 30, 15, 25])
     # vec1[1] = [7, 8]

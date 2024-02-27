@@ -83,21 +83,18 @@ class DualProblemLP:
                 a = self.A[constraint]
                 p = problem_lp.C[constraint]
                 a.append(p)
-                print(a)
                 gte_list.append(a)
                 #self.b.append(problem_lp.C[constraint])
             elif constraint in problem_lp.constraints_sgn_minus_list:
                 a = self.A[constraint]
                 p = problem_lp.C[constraint]
                 a.append(p)
-                print(a)
                 lte_list.append(a)
                 #self.b.append(problem_lp.C[constraint])
             else:
                 a = self.A[constraint]
                 p = problem_lp.C[constraint]
                 a.append(p)
-                print(a)
                 eq_list.append(a)
                 #self.b.append(problem_lp.C[constraint])
 
@@ -118,12 +115,34 @@ class DualProblemLP:
         for i in range(len(self.C) - 1):
             target_func += f' {sgn(self.C[i])} {abs(self.C[i])} * y_{i} '
         target_func += f'{sgn(self.C[len(self.C) - 1])} {abs(self.C[len(self.C) - 1])} * y_{len(self.C) - 1}'
-        target_func += f' -> {self.target}\n'
-        equals = f'Равенства:\n{str(self.eq_list)}\n'
-        gte = f'Неравенства "больше или равно":\n{str(self.gte_list)}\n'
-        lte = f'Неравенства "меньше или равно":\n{str(self.lte_list)}\n'
-        b = f'Вектор правых частей:\n{self.b}\n'
-        csp = f'Номера переменных с ограничением неотрицательности:\n{str(self.constraints_sgn_plus_list)}\n'
-        csm = f'Номера переменных с ограничением неположительности:\n{str(self.constraints_sgn_minus_list)}\n'
-        result = type_problem + target_func + equals + gte + lte + b + csp + csm
+        target_func += f' -> {self.target}\n\n'
+
+
+       # equals = f'Равенства:\n{str(self.eq_list)}\n'
+        equals = ''
+        if self.eq_list:
+            for eq in self.eq_list:
+                for i in range(len(eq) - 1):
+                    equals += f' {sgn(eq[i])} {abs(eq[i])} * y_{i} '
+                equals += f'= {sgn(eq[len(eq) - 1])} {abs(eq[len(eq) - 1])}\n'
+
+        gte = ''
+        if self.gte_list:
+            for gte_elem in self.gte_list:
+                for i in range(len(gte_elem) - 1):
+                    gte += f' {sgn(gte_elem[i])} {abs(gte_elem[i])} * y_{i} '
+                gte += f'>= {sgn(gte_elem[len(gte_elem) - 1])} {abs(gte_elem[len(gte_elem) - 1])}\n'
+
+        # gte = f'Неравенства "больше или равно":\n{str(self.gte_list)}\n'
+        lte = ''
+        if self.lte_list:
+            for lte_elem in self.lte_list:
+                for i in range(len(lte_elem) - 1):
+                    lte += f' {sgn(lte_elem[i])} {abs(lte_elem[i])} * y_{i} '
+                lte += f'<= {sgn(lte_elem[len(lte_elem) - 1])} {abs(lte_elem[len(lte_elem) - 1])}\n'
+        # lte = f'Неравенства "меньше или равно":\n{str(self.lte_list)}\n'
+        # b = f'Вектор правых частей:\n{self.b}\n'
+        csp = f'Номера переменных с ограничением неотрицательности (>= 0):\n{str(self.constraints_sgn_plus_list)}\n'
+        csm = f'Номера переменных с ограничением неположительности (<= 0):\n{str(self.constraints_sgn_minus_list)}\n'
+        result = type_problem + target_func + equals + gte + lte + csp + csm
         return result

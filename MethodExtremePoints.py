@@ -21,47 +21,169 @@ class MethodExtremePoints:
         for comb in self.combs:
             yield comb
 
+    def bubble_max_row(self, m, col):
+        max_element = m[col][col]
+        max_row = col
+        for i in range(col + 1, len(m)):
+            if abs(m[i][col]) > abs(max_element):
+                max_element = m[i][col]
+                max_row = i
+        if max_row != col:
+            temp_row = m[col].copy()
+            m[col] = m[max_row]
+            m[max_row] = temp_row
+
+    def is_singular(self, m):
+        for i in range(len(m)):
+            if not m[i][i]:
+                return True
+        return False
+
     def gauss_method(self, matrix, vector):
-        row_list = []
-        for row in matrix.rows:
-            row_list.append(row.elems)
-
-        matrix = row_list
         vector = vector.elems
-        n = len(matrix)
-        for i in range(n):
-            max_el = abs(matrix[i][i])
-            max_row = i
-            for k in range(i + 1, n):
-                if abs(matrix[k][i]) > max_el:
-                    max_el = abs(matrix[k][i])
-                    max_row = k
+        m = []
+        for i in range(len(matrix)):
+            matrix[i].append(vector[i])
+            m.append(matrix[i])
 
-            matrix[i], matrix[max_row] = matrix[max_row], matrix[i]
-            vector[i], vector[max_row] = vector[max_row], vector[i]
+        n = len(m)
 
-            for k in range(i + 1, n):
-                c = -matrix[k][i] / matrix[i][i]
-                for j in range(i, n):
-                    if i == j:
-                        matrix[k][j] = 0
-                    else:
-                        matrix[k][j] += c * matrix[i][j]
-                vector[k] += c * vector[i]
+        for k in range(n - 1):
+            self.bubble_max_row(m, k)
+            for i in range(k + 1, n):
+                if m[k][k] == 0:
+                    continue
+                div = m[i][k] / m[k][k]
+                m[i][-1] -= div * m[k][-1]
+                for j in range(k, n):
+                    m[i][j] -= div * m[k][j]
+
+        if self.is_singular(m):
+            return 0
 
         x = [0 for _ in range(n)]
-        for i in range(n - 1, -1, -1):
-            x[i] = vector[i] / matrix[i][i]
-            for k in range(i - 1, -1, -1):
-                vector[k] -= matrix[k][i] * x[i]
+        for k in range(n - 1, -1, -1):
+            if m[k][k] == 0:
+                continue
+            x[k] = (m[k][-1] - sum([m[k][j] * x[j] for j in range(k + 1, n)])) / m[k][k]
+
         for coord in x:
             if coord < 0:
                 return 0
+
         return x
+
+    # def gauss_method(self, matrix, vector):
+    #     row_list = []
+    #     for row in matrix.rows:
+    #         row_list.append(row.elems)
+    #
+    #     matrix = row_list
+    #     vector = vector.elems
+    #     n = len(matrix)
+    #     for i in range(n):
+    #         max_el = abs(matrix[i][i])
+    #         max_row = i
+    #         for k in range(i + 1, n):
+    #             if abs(matrix[k][i]) > max_el:
+    #                 max_el = abs(matrix[k][i])
+    #                 max_row = k
+    #
+    #         matrix[i], matrix[max_row] = matrix[max_row], matrix[i]
+    #         vector[i], vector[max_row] = vector[max_row], vector[i]
+    #
+    #         for k in range(i + 1, n):
+    #             # if matrix[i][i] == 0:
+    #             #     continue
+    #             c = -matrix[k][i] / matrix[i][i]
+    #             for j in range(i, n):
+    #                 if i == j:
+    #                     matrix[k][j] = 0
+    #                 else:
+    #                     matrix[k][j] += c * matrix[i][j]
+    #             vector[k] += c * vector[i]
+    #
+    #     x = [0 for _ in range(n)]
+    #     for i in range(n - 1, -1, -1):
+    #         # if matrix[i][i] == 0:
+    #         #     continue
+    #         x[i] = vector[i] / matrix[i][i]
+    #         for k in range(i - 1, -1, -1):
+    #             vector[k] -= matrix[k][i] * x[i]
+    #     for coord in x:
+    #         if coord < 0:
+    #             return 0
+    #     return x
+
+    # def make_identity(self, matrix):
+    #     # перебор строк в обратном порядке
+    #     for nrow in range(len(matrix) - 1, 0, -1):
+    #         row = matrix[nrow]
+    #         for upper_row in matrix[:nrow]:
+    #             factor = upper_row[nrow]
+    #             upper_row -= factor * row
+    #     return matrix
+    #
+    # def gauss_method(self, matrix, vector):
+    #     row_list = []
+    #     for row in matrix.rows:
+    #         row_list.append(row.elems)
+    #
+    #     matrix = row_list
+    #     vector = vector.elems
+    #
+    #     m = []
+    #     for i in range(len(matrix)):
+    #         matrix[i].append(vector[i])
+    #         m.append(matrix[i])
+    #
+    #     m = np.array(m)
+    #
+    #     for nrow in range(len(m)):
+    #         # nrow равен номеру строки
+    #         # np.argmax возвращает номер строки с максимальным элементом в уменьшенной матрице
+    #         # которая начинается со строки nrow. Поэтому нужно прибавить nrow к результату
+    #         pivot = nrow + np.argmax(abs(m[nrow:, nrow]))
+    #         if pivot != nrow:
+    #             # swap
+    #             # matrix[nrow], matrix[pivot] = matrix[pivot], matrix[nrow] - не работает.
+    #             # нужно переставлять строки именно так, как написано ниже
+    #             m[[nrow, pivot]] = m[[pivot, nrow]]
+    #         row = m[nrow]
+    #         divider = row[nrow]  # диагональный элемент
+    #         if abs(divider) == 0:
+    #             # почти нуль на диагонали. Продолжать не имеет смысла, результат счёта неустойчив
+    #             return 0
+    #         # делим на диагональный элемент.
+    #         row /= divider
+    #         # теперь надо вычесть приведённую строку из всех нижележащих строчек
+    #         for lower_row in m[nrow + 1:]:
+    #             factor = lower_row[nrow]  # элемент строки в колонке nrow
+    #             lower_row -= factor * row  # вычитаем, чтобы получить ноль в колонке nrow
+    #     # приводим к диагональному виду
+    #     self.make_identity(m)
+    #
+    #     x = []
+    #     for eq in m:
+    #         x.append(eq[-1])
+    #         if eq[-1] > 0:
+    #             return 0
+    #     return x
+
+    # def gauss_method(self, matrix, vector):
+    #     m = matrix.convert_to_np()
+    #     v = vector.convert_to_np()
+    #
+    #     x = np.linalg.solve(m, v)
+    #     x = list(x)
+    #     for coord in x:
+    #         if coord < 0:
+    #             return 0
+    #     return x
 
     def back_convert(self, value_opt_tf):
         change_target = self.changes_dict.get('CHANGE_TARGET')
-        if change_target:
+        if change_target == 1:
             value_opt_tf_change = -value_opt_tf
             return value_opt_tf_change
         return value_opt_tf
@@ -75,10 +197,14 @@ class MethodExtremePoints:
             A = self.A.copy()[self.M, N_comb]
             A_big = A + self.b # A.copy() must be
             A = self.A.copy()[self.M, N_comb]
+            matr = []
+            for i in range(len(A)):
+                matr.append(A[i].copy().elems)
             r_A = A.rang()
             r_big = A_big.rang()
-            if r_A == r_big:
-                gauss_vector = self.gauss_method(A.copy(), self.b.copy())
+            #if r_A == r_big:
+            if np.linalg.det(np.array(matr)) != 0:
+                gauss_vector = self.gauss_method(matr, self.b.copy())  #A.copy()
                 if gauss_vector == 0:
                     continue
                 support_vector = [0 for _ in range(len(self.N))]
@@ -106,8 +232,6 @@ class MethodExtremePoints:
                     current_x_opt.pop()
                     current_x_opt.append(curr_x)
         current_opt_value_tf = self.back_convert(current_opt_value_tf)
-
-
 
         return current_x_opt, current_opt_value_tf
 

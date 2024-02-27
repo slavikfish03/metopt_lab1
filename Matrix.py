@@ -37,7 +37,6 @@ class Matrix:
 
     def __getitem__(self, indexes_list):
         # [ [], [] ]
-        print(type(indexes_list))
         if isinstance(indexes_list, int) or isinstance(indexes_list, float):
             if not isinstance(indexes_list, int):
                 with open('logs.txt', 'a') as log:
