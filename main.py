@@ -1,5 +1,6 @@
 from DualProblemLP import *
 from MethodExtremePoints import *
+from SimplexMethod import *
 
 if __name__ == "__main__":
     open('logs.txt', 'w').close()
@@ -17,11 +18,11 @@ if __name__ == "__main__":
 
     print("\n\n__________\nРЕШЕНИЕ ПРЯМОЙ ЗАДАЧИ. МЕТОД ПЕРЕБОРА КРАЙНИХ ТОЧЕК:\n__________\n\n")
     ExtremePointsPrimary = MethodExtremePoints(canonic_problem_lp_primary)
-    x, val = ExtremePointsPrimary.solve()
+    x_primary, val_primary = ExtremePointsPrimary.solve()
     print("Оптимальный вектор: ")
-    print(x[0])
+    print(x_primary[0])
     print("Оптимальное значение целевой функции: ")
-    print(val)
+    print(val_primary)
 
 
     general_problem_lp_dual = DualProblemLP(general_problem_lp_primary)
@@ -34,11 +35,34 @@ if __name__ == "__main__":
 
     print("\n\n__________\nРЕШЕНИЕ ДВОЙСТВЕННОЙ ЗАДАЧИ. МЕТОД ПЕРЕБОРА КРАЙНИХ ТОЧЕК:\n__________\n\n")
     ExtremePointsDual = MethodExtremePoints(canonic_problem_lp_dual)
-    x1, val1 = ExtremePointsDual.solve()
+    x_dual, val_dual = ExtremePointsDual.solve()
     print("Оптимальный вектор: ")
-    print(x1[0])
+    print(x_dual[0])
     print("Оптимальное значение целевой функции: ")
-    print(val1)
+    print(val_dual)
+
+    print("\n\n__________\nПРЯМАЯ ЗАДАЧА:\n__________\n\n")
+    print(general_problem_lp_primary)
+
+    print("\n\n__________\nРЕШЕНИЕ ПРЯМОЙ ЗАДАЧИ. ТАБЛИЧНЫЙ СИМПЛЕКС-МЕТОД:\n__________\n\n")
+    SimplexMethodPrimary = SimplexMethod(canonic_problem_lp_primary.C, canonic_problem_lp_primary.A,
+                                         canonic_problem_lp_primary.b, canonic_problem_lp_primary.changes_dict,
+                                         canonic_problem_lp_primary.x_limits_start)
+    solution_primary = SimplexMethodPrimary.solve()
+    print("Оптимальное значение целевой функции: ")
+    print(solution_primary)
+
+    print("\n\n__________\nДВОЙСТВЕННАЯ ЗАДАЧА:\n__________\n\n")
+    print(general_problem_lp_dual)
+
+    print("\n\n__________\nРЕШЕНИЕ ДВОЙСТВЕННОЙ ЗАДАЧИ. ТАБЛИЧНЫЙ СИМПЛЕКС-МЕТОД:\n__________\n\n")
+    SimplexMethodDual = SimplexMethod(canonic_problem_lp_dual.C, canonic_problem_lp_dual.A,
+                                      canonic_problem_lp_dual.b, canonic_problem_lp_dual.changes_dict,
+                                      canonic_problem_lp_dual.x_limits_start)
+    solution_dual = SimplexMethodDual.solve()
+    print("Оптимальное значение целевой функции: ")
+    print(solution_dual)
+
 
     # vec1 = Vector([10, 20, 30, 15, 25])
     # vec1[1] = [7, 8]

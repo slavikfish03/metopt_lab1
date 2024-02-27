@@ -1,16 +1,24 @@
 import numpy as np
 import math
 
+from MethodExtremePoints import *
 
 class SimplexMethod:
-    def __init__(self, c, A, b):
-        new_c = []
+    def __init__(self, c, A, b, changes_dict, x_limits_start):
+        new_c = c.copy().elems
         new_A = []
-        new_b = []
+        new_b = b.copy().elems
 
+        for row in A.copy():
+            new_A.append(row.copy().elems)
 
+        self.c = new_c
+        self.A = new_A
+        self.b = new_b
+        self.changes_dict = changes_dict
+        self.x_limits_start = x_limits_start
 
-        self.tableau = self.to_tableau(c, A, b)
+        self.tableau = self.to_tableau(new_c, new_A, new_b)
 
     def to_tableau(self, c, A, b):
         xb = [eq + [x] for eq, x in zip(A, b)]
@@ -63,7 +71,7 @@ class SimplexMethod:
 
     def get_solution(self):
         columns = np.array(self.tableau).T
-        solutions = []
+        solutions = [] # [1, 3, ...]
         answer = 0
         c_index = 0
         for column in columns:
@@ -71,11 +79,26 @@ class SimplexMethod:
             if self.is_basic(column):
                 one_index = column.tolist().index(1)
                 solution = columns[-1][one_index]
-                c_value = c[c_index]
+                c_value = self.c[c_index]
                 answer += solution * c_value
             c_index += 1
             solutions.append(solution)
-        print(solutions)
+        change_target = self.changes_dict.get('CHANGE_TARGET')
+        if change_target == 1:
+            answer = -answer
+
+        curr_x = []
+        for i in range(len(self.x_limits_start)):
+            if self.x_limits_start[i] == 1:
+                curr_x.append(solutions[i])
+            elif self.x_limits_start[i] == -1:
+                curr_x.append(solutions[i])
+            elif self.x_limits_start[i] == 0:
+                temp = solutions[i] - solutions[i + 1]
+                curr_x.append(temp)
+
+        print("Оптимальный вектор: ")
+        print(curr_x)
         return answer
 
     def solve(self):
@@ -119,7 +142,3 @@ class SimplexMethod:
 #     [-2, 1, -1, 0, 0, 0, 1]
 # ]
 # b = [18, 15, -6, -15]
-
-simplex_solver = SimplexMethod(c, A, b)
-solution = simplex_solver.solve()
-print(solution)

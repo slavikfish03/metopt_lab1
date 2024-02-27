@@ -15,7 +15,7 @@ class MethodExtremePoints:
         self.changes_dict = problem_lp.changes_dict
 
         self.M = [i for i in range(len(self.A))]
-        self.combs = combinations(self.N, len(self.M))
+        self.combs = combinations(self.N, len(self.M))  # (n m)^T
 
     def combinations_generator(self):
         for comb in self.combs:
