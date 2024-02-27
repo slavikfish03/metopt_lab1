@@ -20,6 +20,7 @@ class DualProblemLP:
         self.constraints_sgn_minus_list = []
         self.A = None
         self.N = None
+        self.x_limits_start = problem_lp.x_limits_start
 
         self.eq_list = []
         self.gte_list = []
@@ -59,8 +60,9 @@ class DualProblemLP:
 
         matrix = eq_list + gte_list + lte_list
         self.A = Matrix(matrix)
-        self.A = self.A.transpose()
         self.N = [x for x in range(len(self.A))]
+        self.A = self.A.transpose()
+
 
         for i in range(len(eq_list) + len(gte_list) + len(lte_list)):
             if 0 <= i < len(eq_list):

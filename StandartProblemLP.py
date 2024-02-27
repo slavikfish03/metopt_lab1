@@ -35,7 +35,7 @@ class StandartProblemLP:
     def change_target(self):
         if self.target == 'max':
             self.target = 'min'
-            #self.changes_dict['[TARGET]: is_change_target'] = 1
+            self.changes_dict['CHANGE_TARGET'] = 1
             self.C = -1 * self.C
 
     def change_constraints_minus(self):

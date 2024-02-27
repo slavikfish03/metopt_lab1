@@ -1,33 +1,45 @@
 from DualProblemLP import *
+from MethodExtremePoints import *
 
 if __name__ == "__main__":
     open('logs.txt', 'w').close()
-    # general_problem_lp_primary = GeneralProblemLP()
-    # print(general_problem_lp_primary)
-    #
-    # standart_problem_lp_primary = StandartProblemLP(general_problem_lp_primary)
-    #
-    # general_problem_lp_dual = DualProblemLP(general_problem_lp_primary)
-    # print(general_problem_lp_dual)
-    #
-    # canonic_problem_lp_primary = CanonicProblemLP(standart_problem_lp_primary)
-    # print(canonic_problem_lp_primary)
-    #
-    # standart_problem_lp_dual = StandartProblemLP(general_problem_lp_dual)
-    # canonic_problem_lp_dual = CanonicProblemLP(standart_problem_lp_dual)
-    #
-    # print(canonic_problem_lp_dual)
+    general_problem_lp_primary = GeneralProblemLP()
+    print(general_problem_lp_primary)
 
-    # standart_problem_lp = StandartProblemLP(general_problem_lp)
-    # print(standart_problem_lp)
-    #
-    # canonic_problem_lp = CanonicProblemLP(standart_problem_lp)
-    # print(canonic_problem_lp)
+    standart_problem_lp_primary = StandartProblemLP(general_problem_lp_primary)
+    #print(standart_problem_lp_primary)
 
-    vec1 = Vector([10, 20, 30, 15, 25])
+    canonic_problem_lp_primary = CanonicProblemLP(standart_problem_lp_primary)
+    #print(canonic_problem_lp_primary)
+
+    general_problem_lp_dual = DualProblemLP(general_problem_lp_primary)
+    #print(general_problem_lp_dual)
+    standart_problem_lp_dual = StandartProblemLP(general_problem_lp_dual)
+    #print(standart_problem_lp_dual)
+    canonic_problem_lp_dual = CanonicProblemLP(standart_problem_lp_dual)
+    #print(canonic_problem_lp_dual)
+    #print(canonic_problem_lp_dual)
+
+    #standart_problem_lp = StandartProblemLP(general_problem_lp)
+    #print(standart_problem_lp)
+
+    #canonic_problem_lp = CanonicProblemLP(standart_problem_lp)
+    #print(canonic_problem_lp)
+
+    ExtremePointsPrimary = MethodExtremePoints(canonic_problem_lp_primary)
+    x, val = ExtremePointsPrimary.solve()
+    print("opt_vec ", x)
+    print("target_func_val ", val)
+
+    ExtremePointsDual = MethodExtremePoints(canonic_problem_lp_dual)
+    x1, val1 = ExtremePointsDual.solve()
+    print("opt_vec dual ", x1)
+    print("target_func_val dual ", val1)
+
+    # vec1 = Vector([10, 20, 30, 15, 25])
     # vec1[1] = [7, 8]
     # print(vec1)
-    vec2 = Vector([5, 70, 50, 80, 100])
+    # vec2 = Vector([5, 70, 50, 80, 100])
     #
     # v1 = Vector([2, 4, 0, 9, 0])
     # v2 = Vector([-2, 1, 3, 89, 11])
@@ -45,12 +57,12 @@ if __name__ == "__main__":
     #
     # print(A[M, N] * b[N])
 
-    vec3 = vec1 + vec2
-    # print(vec1)
-    print(vec3)
-    #
-    N = [0, 2, 4]
-    print(vec3[N])
-    print(vec3)
+    # vec3 = vec1 + vec2
+    # # print(vec1)
+    # print(vec3)
+    # #
+    # N = [0, 2, 4]
+    # print(vec3[N])
+    # print(vec3)
     #
     # matr1 = Matrix([vec1, vec2, vec3])

@@ -1,5 +1,7 @@
 from typing import List
 
+import numpy as np
+
 
 class Vector:
     def __init__(self, elements_list: List):
@@ -66,3 +68,6 @@ class Vector:
     def copy(self):
         new_elems = self.elems.copy()
         return Vector(new_elems)
+
+    def convert_to_np(self):
+        return np.array(self.elems)

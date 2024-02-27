@@ -1,3 +1,5 @@
+import numpy as np
+
 from typing import Tuple
 
 from Vector import *
@@ -70,9 +72,10 @@ class Matrix:
             return Matrix(new_elems)
 
     def __add__(self, other):
-        for i in range(len(self.rows)):
-            self.rows[i].append(other[i])
-
+        rows = self.rows.copy()
+        for i in range(len(rows)):
+            rows[i].append(other[i])
+        return Matrix(rows)
 
     def transpose(self):
         count_new_rows = len(self.rows[0])
@@ -90,3 +93,17 @@ class Matrix:
             new_rows.append(row.copy())
 
         return Matrix(new_rows)
+
+    def convert_to_np(self):
+        m_list = []
+        for vec in self.rows:
+            m_list.append(vec.elems)
+        return np.array(m_list)
+
+    def rang(self):
+        matrix = self.convert_to_np()
+        return np.linalg.matrix_rank(matrix)
+
+    def det(self):
+        matrix = self.convert_to_np()
+        return np.linalg.det(matrix)
