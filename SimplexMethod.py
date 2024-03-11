@@ -4,7 +4,7 @@ import math
 from MethodExtremePoints import *
 
 class SimplexMethod:
-    def __init__(self, c, A, b, changes_dict, x_limits_start):
+    def __init__(self, c, A, b, changes_dict, x_limits_start, target):
         new_c = c.copy().elems
         new_A = []
         new_b = b.copy().elems
@@ -12,21 +12,28 @@ class SimplexMethod:
         for row in A.copy():
             new_A.append(row.copy().elems)
 
+        # for b_elem in new_b:
+        #     if b_elem < 0:
+        #         index = new_b.index(b_elem)
+        #         new_b[index] = -b_elem
+        #         new_A[index] = [-1 * elem for elem in new_A[index]]
+
+
         self.c = new_c
         self.A = new_A
         self.b = new_b
         self.changes_dict = changes_dict
         self.x_limits_start = x_limits_start
 
-        self.tableau = self.to_tableau(new_c, new_A, new_b)
+        self.table = self.to_table(new_c, new_A, new_b)
 
-    def to_tableau(self, c, A, b):
+    def to_table(self, c, A, b):
         xb = [eq + [x] for eq, x in zip(A, b)]
         z = c + [0]
         return xb + [z]
 
     def can_be_improved(self):
-        z = self.tableau[-1]
+        z = self.table[-1]
         column = None
         for i, x in enumerate(z[:-1]):
             if x < 0:
@@ -35,16 +42,16 @@ class SimplexMethod:
         return column is not None
 
     def get_pivot_position(self):
-        z = self.tableau[-1]
+        z = self.table[-1]
         column = None
         for i, x in enumerate(z[:-1]):
             if x < 0:
                 column = i
                 break
         restrictions = []
-        for eq in self.tableau[:-1]:
+        for eq in self.table[:-1]:
             el = eq[column]
-            restrictions.append(math.inf if el <= 0 else eq[-1] / el)
+            restrictions.append(math.inf if (el <= 0 or eq[-1] <= 0) else eq[-1] / el)
 
         row = restrictions.index(min(restrictions))
         if restrictions[row] == math.inf:
@@ -53,24 +60,24 @@ class SimplexMethod:
             return row, column
 
     def pivot_step(self, pivot_position):
-        new_tableau = [[] for eq in self.tableau]
+        new_tableau = [[] for eq in self.table]
 
         i, j = pivot_position
-        pivot_value = self.tableau[i][j]
-        new_tableau[i] = np.array(self.tableau[i]) / pivot_value
+        pivot_value = self.table[i][j]
+        new_tableau[i] = np.array(self.table[i]) / pivot_value
 
-        for eq_i, eq in enumerate(self.tableau):
+        for eq_i, eq in enumerate(self.table):
             if eq_i != i:
-                multiplier = np.array(new_tableau[i]) * self.tableau[eq_i][j]
-                new_tableau[eq_i] = np.array(self.tableau[eq_i]) - multiplier
+                multiplier = np.array(new_tableau[i]) * self.table[eq_i][j]
+                new_tableau[eq_i] = np.array(self.table[eq_i]) - multiplier
 
-        self.tableau = new_tableau
+        self.table = new_tableau
 
     def is_basic(self, column):
         return sum(column) == 1 and len([c for c in column if c == 0]) == len(column) - 1
 
     def get_solution(self):
-        columns = np.array(self.tableau).T
+        columns = np.array(self.table).T
         solutions = [] # [1, 3, ...]
         answer = 0
         c_index = 0

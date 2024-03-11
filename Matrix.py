@@ -8,8 +8,6 @@ from Vector import *
 class Matrix:
     def __init__(self, rows: List):
         self.rows = rows
-        with open('logs.txt', 'a') as log:
-            log.write(f'[INFO]: Создан объект {[str(vec) for vec in self.rows]} класса Matrix.\n')
 
     def __str__(self):
         string = "(\n"
@@ -24,8 +22,6 @@ class Matrix:
     def __mul__(self, other):
         if isinstance(other, Vector):
             if len(self.rows[0]) != len(other):
-                with open('logs.txt', 'a') as log:
-                    log.write("[ERROR: class Matrix, __mul__]: Несоответствие размеров при умножении матрицы на вектор.\n")
                 raise SystemExit
             new_elems = []
             for row in self.rows:
@@ -39,12 +35,8 @@ class Matrix:
         # [ [], [] ]
         if isinstance(indexes_list, int) or isinstance(indexes_list, float):
             if not isinstance(indexes_list, int):
-                with open('logs.txt', 'a') as log:
-                    log.write("[ERROR: class Matrix, __getitem__]: Попытка обратиться по нецелочисленному индексу.\n")
                 raise SystemExit
             if indexes_list < 0:
-                with open('logs.txt', 'a') as log:
-                    log.write("[ERROR: class Matrix, __getitem__]: Попытка обратиться по отрицательному индексу.\n")
                 raise SystemExit
             return self.rows[indexes_list]
         if isinstance(indexes_list, List):

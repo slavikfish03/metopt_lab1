@@ -2,10 +2,9 @@ from DualProblemLP import *
 from MethodExtremePoints import *
 from SimplexMethod import *
 
+import time
+
 if __name__ == "__main__":
-    open('logs.txt', 'w').close()
-
-
     general_problem_lp_primary = GeneralProblemLP()
     print("\n\n__________\nПРЯМАЯ ЗАДАЧА:\n__________\n\n")
     print(general_problem_lp_primary)
@@ -17,8 +16,11 @@ if __name__ == "__main__":
     #print(canonic_problem_lp_primary)
 
     print("\n\n__________\nРЕШЕНИЕ ПРЯМОЙ ЗАДАЧИ. МЕТОД ПЕРЕБОРА КРАЙНИХ ТОЧЕК:\n__________\n\n")
+
     ExtremePointsPrimary = MethodExtremePoints(canonic_problem_lp_primary)
+    start_time1_extrp = time.time()
     x_primary, val_primary = ExtremePointsPrimary.solve()
+    time1_extrp = time.time() - start_time1_extrp
     print("Оптимальный вектор: ")
     print(x_primary[0])
     print("Оптимальное значение целевой функции: ")
@@ -35,7 +37,9 @@ if __name__ == "__main__":
 
     print("\n\n__________\nРЕШЕНИЕ ДВОЙСТВЕННОЙ ЗАДАЧИ. МЕТОД ПЕРЕБОРА КРАЙНИХ ТОЧЕК:\n__________\n\n")
     ExtremePointsDual = MethodExtremePoints(canonic_problem_lp_dual)
+    start_time2_extrp = time.time()
     x_dual, val_dual = ExtremePointsDual.solve()
+    time2_extrp = time.time() - start_time2_extrp
     print("Оптимальный вектор: ")
     print(x_dual[0])
     print("Оптимальное значение целевой функции: ")
@@ -47,8 +51,10 @@ if __name__ == "__main__":
     print("\n\n__________\nРЕШЕНИЕ ПРЯМОЙ ЗАДАЧИ. ТАБЛИЧНЫЙ СИМПЛЕКС-МЕТОД:\n__________\n\n")
     SimplexMethodPrimary = SimplexMethod(canonic_problem_lp_primary.C, canonic_problem_lp_primary.A,
                                          canonic_problem_lp_primary.b, canonic_problem_lp_primary.changes_dict,
-                                         canonic_problem_lp_primary.x_limits_start)
+                                         canonic_problem_lp_primary.x_limits_start, canonic_problem_lp_primary.target)
+    start_time1_simplex = time.time()
     solution_primary = SimplexMethodPrimary.solve()
+    time1_simplex = time.time() - start_time1_simplex
     print("Оптимальное значение целевой функции: ")
     print(solution_primary)
 
@@ -58,11 +64,16 @@ if __name__ == "__main__":
     print("\n\n__________\nРЕШЕНИЕ ДВОЙСТВЕННОЙ ЗАДАЧИ. ТАБЛИЧНЫЙ СИМПЛЕКС-МЕТОД:\n__________\n\n")
     SimplexMethodDual = SimplexMethod(canonic_problem_lp_dual.C, canonic_problem_lp_dual.A,
                                       canonic_problem_lp_dual.b, canonic_problem_lp_dual.changes_dict,
-                                      canonic_problem_lp_dual.x_limits_start)
+                                      canonic_problem_lp_dual.x_limits_start, canonic_problem_lp_dual.target)
+    start_time2_simplex = time.time()
     solution_dual = SimplexMethodDual.solve()
+    time2_simplex = time.time() - start_time2_simplex
     print("Оптимальное значение целевой функции: ")
     print(solution_dual)
 
+
+    print(f'Время выполнения метода экстремальных точек: {(time1_extrp + time2_extrp) / 2}')
+    print(f'Время выполнения табличного симплекс-метода: {(time1_simplex + time2_simplex) / 2}')
 
     # vec1 = Vector([10, 20, 30, 15, 25])
     # vec1[1] = [7, 8]

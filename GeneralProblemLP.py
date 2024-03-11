@@ -17,9 +17,6 @@ class GeneralProblemLP:
             C_list = [float(x) for x in C_coeffs.split()]
 
             if len(C_list) != n:
-                with open('logs.txt', 'a') as log:
-                    log.write(
-                        "[ERROR: input C]: Несоответствие введенных параметров вектора коэффициентов целевой функции.\n")
                 raise SystemExit
 
             print("_____\nВведите 'min', если Вы хотите минимизировать целевую функцию, 'max' -- если "
@@ -27,8 +24,6 @@ class GeneralProblemLP:
                   "ВВОД: ")
             target = str(input())
             if target != 'min' and target != 'max':
-                with open('logs.txt', 'a') as log:
-                    log.write("[ERROR: input]: Некорректно введена цель задачи (min или max).\n")
                 raise SystemExit
 
             self.target = target
@@ -52,8 +47,6 @@ class GeneralProblemLP:
                     eq_elem = [float(x) for x in eq_str.split()]
                     eq_list.append(eq_elem)
                 if eq_num != len(eq_list):
-                    with open('logs.txt', 'a') as log:
-                        log.write("[ERROR: input]: Несоответствие введеных параметров ограничений-равенств.\n")
                     raise SystemExit
             self.eq_list = eq_list
 
@@ -79,9 +72,6 @@ class GeneralProblemLP:
                         gte_elem = [float(x) for x in gte_str.split()]
                         gte_list.append(gte_elem)
                 if gte_num != len(gte_list):
-                    with open('logs.txt', 'a') as log:
-                        log.write("[ERROR: input]: Несоответствие введеных параметров ограничений-неравенств типа "
-                                  "'>='.\n")
                     raise SystemExit
 
                 print("_____\nВведите количество неравенств со знаком МЕНЬШЕ ЛИБО РАВНО.\n"
@@ -99,9 +89,6 @@ class GeneralProblemLP:
                         lte_elem = [float(x) for x in lte_str.split()]
                         lte_list.append(lte_elem)
                 if lte_num != len(lte_list):
-                    with open('logs.txt', 'a') as log:
-                        log.write("[ERROR: input]: Несоответствие введеных параметров ограничений-неравенств типа "
-                                  "'<='.\n")
                     raise SystemExit
 
             self.gte_list = gte_list
@@ -120,8 +107,6 @@ class GeneralProblemLP:
                 constraints_sgn_plus_list = [int(x) - 1 for x in constraints_sgn_plus_str.split()]
 
                 if constraints_sgn_plus_num != len(constraints_sgn_plus_list):
-                    with open('logs.txt', 'a') as log:
-                        log.write("[ERROR: input]: Несоответствие введеных параметров ограничений на знак.\n")
                     raise SystemExit
 
             self.constraints_sgn_plus_list = constraints_sgn_plus_list
@@ -139,17 +124,12 @@ class GeneralProblemLP:
                 constraints_sgn_minus_list = [int(x) - 1 for x in constraints_sgn_minus_str.split()]
 
                 if constraints_sgn_minus_num != len(constraints_sgn_minus_list):
-                    with open('logs.txt', 'a') as log:
-                        log.write("[ERROR: input]: Несоответствие введеных параметров ограничений на знак.\n")
                     raise SystemExit
 
             self.constraints_sgn_minus_list = constraints_sgn_minus_list
 
             constraints_sgn_list = constraints_sgn_plus_list + constraints_sgn_minus_list
             if len(set(constraints_sgn_list)) != len(constraints_sgn_list):
-                with open('logs.txt', 'a') as log:
-                    log.write("[ERROR: input]: На одну и ту же переменную наложены ограничения неотрицательности и "
-                              "неположительности.\n")
                 raise SystemExit
 
             self.x_limits_start = []
